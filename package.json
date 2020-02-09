@@ -12,6 +12,7 @@
     "apollo-link": "^1.2.13",
     "apollo-link-error": "^1.1.12",
     "apollo-link-http": "^1.5.16",
+    "d3": "^5.15.0",
     "graphql": "^14.6.0",
     "graphql-tag": "^2.10.3",
     "react": "^16.12.0",
