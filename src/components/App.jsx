@@ -298,7 +298,7 @@ function App() {
   return (
     <Layout>
       <SearchBar />
-      <Profile name={data.searchQuery} testData={testData} />
+      <Profile name={data.searchQuery} />
     </Layout>
   );
 }

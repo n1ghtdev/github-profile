@@ -6,24 +6,14 @@ import gql from 'graphql-tag';
 import Profile from './Profile';
 import Repositories from './Repositories';
 
-const Wrapper = styled.main`
-  display: flex;
-`;
+const Wrapper = styled.main``;
 
 const GET_GITHUB_USER = gql`
   query getUser($login: String!) {
     user(login: $login) {
-      bio
       avatarUrl
-      company
       createdAt
       email
-      followers {
-        totalCount
-      }
-      following {
-        totalCount
-      }
       location
       name
       login
@@ -36,6 +26,7 @@ const GET_GITHUB_USER = gql`
           isArchived
           forkCount
           createdAt
+          url
           languages(first: 1, orderBy: { field: SIZE, direction: DESC }) {
             nodes {
               name
@@ -50,30 +41,39 @@ const GET_GITHUB_USER = gql`
           }
           description
         }
-        totalDiskUsage
       }
-      url
-      status {
-        message
-        emojiHTML
+      contributionsCollection(
+        from: "2020-01-08T22:00:00.000Z"
+        to: "2020-02-09T22:00:00.000Z"
+      ) {
+        contributionCalendar {
+          totalContributions
+          weeks {
+            contributionDays {
+              color
+              contributionCount
+              date
+            }
+          }
+        }
       }
     }
   }
 `;
 
 export default function({ name, testData }) {
-  // const { data } = useQuery(GET_GITHUB_USER, {
-  //   variables: { login: name },
-  // });
+  const { data } = useQuery(GET_GITHUB_USER, {
+    variables: { login: name },
+  });
 
-  // if (!data) return null;
-  // console.log(data.user);
+  if (!data) return null;
+  console.log(data.user);
 
-  const { repositories, ...user } = testData.data.user;
+  const { repositories, ...user } = data.user;
 
   return (
     <Wrapper>
-      <Profile user={user} />
+      <Profile {...user} />
       <Repositories repositories={repositories} />
     </Wrapper>
   );

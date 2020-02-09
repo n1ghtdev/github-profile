@@ -7,18 +7,20 @@ const List = styled.div``;
 function Repositories({ repositories }) {
   return (
     <List>
-      {repositories.nodes.map(repo => (
-        <Repository
-          title={repo.nameWithOwner}
-          description={repo.description}
-          language={repo.languages.nodes.shift()}
-          issuesCount={repo.issues.totalCount}
-          forksCount={repo.forkCount}
-          pullRequestCount={repo.pullRequests.totalCount}
-          isArchived={repo.isArchived}
-          createdAt={repo.createdAt}
-        />
-      ))}
+      {repositories &&
+        repositories.nodes.map(repo => (
+          <Repository
+            key={repo.id}
+            title={repo.nameWithOwner}
+            description={repo.description}
+            language={repo.languages.nodes.shift()}
+            issuesCount={repo.issues.totalCount}
+            forksCount={repo.forkCount}
+            pullRequestCount={repo.pullRequests.totalCount}
+            isArchived={repo.isArchived}
+            createdAt={repo.createdAt}
+          />
+        ))}
     </List>
   );
 }

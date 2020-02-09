@@ -24,9 +24,9 @@ const List = styled.ul`
   padding: 0;
 `;
 const ListItem = styled.li`
-  margin-right: 20px;
-  &:last-child {
-    margin-right: 0;
+  margin-left: 20px;
+  &:first-child {
+    margin-left: 0;
   }
 `;
 const Language = styled.div`
@@ -60,7 +60,9 @@ function Repositories({
       <Description>{description}</Description>
       <List>
         <ListItem>
-          <Language color={language.color}>{language.name}</Language>
+          {language && (
+            <Language color={language.color}>{language.name}</Language>
+          )}
         </ListItem>
         <ListItem>
           Created at {new Date(createdAt).toLocaleDateString()}
