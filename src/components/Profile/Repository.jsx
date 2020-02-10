@@ -1,33 +1,33 @@
 import React from 'react';
 import styled from 'styled-components';
+import Octicon, {
+  IssueOpened,
+  GitPullRequest,
+  RepoForked,
+  Star,
+} from '@primer/octicons-react';
 
 const Wrapper = styled.article`
-  margin-bottom: 20px;
-  padding: 10px;
+  margin-bottom: 3px;
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: ${({ theme }) => theme.background};
+  border-radius: 4px;
 `;
 const Title = styled.h3`
-  font-size: 1.5rem;
+  font-size: 16px;
   margin: 0;
   color: ${({ theme }) => theme.primary};
+  a {
+    cursor: pointer;
+  }
 `;
 const SubTitle = styled.span`
   color: ${({ theme }) => theme.textDark};
   font-size: 16px;
   margin-left: 20px;
-`;
-const Description = styled.p``;
-
-const List = styled.ul`
-  list-style-type: none;
-  display: inline-flex;
-  margin: 0;
-  padding: 0;
-`;
-const ListItem = styled.li`
-  margin-left: 20px;
-  &:first-child {
-    margin-left: 0;
-  }
 `;
 const Language = styled.div`
   &::before {
@@ -40,38 +40,68 @@ const Language = styled.div`
     display: inline-block;
   }
 `;
+const Info = styled.ul`
+  list-style-type: none;
+  margin: 0;
+  font-size: 14px;
+`;
+const InfoItem = styled.li`
+  display: inline-block;
+  margin-right: 10px;
+  &:last-child {
+    margin-right: 0;
+  }
+`;
+const ItemIcon = styled.span`
+  margin-right: 5px;
+`;
 
-function Repositories({
+function Repository({
   title,
-  description,
   language,
   issuesCount,
   forksCount,
   pullRequestCount,
   isArchived,
-  createdAt,
+  url,
 }) {
   return (
     <Wrapper>
+      {language && <Language color={language.color}>{language.name}</Language>}
       <Title>
-        {title}
-        {isArchived ? <SubTitle>Archived</SubTitle> : ''}
+        <a href={url} target="_blank" rel="noopener noreferrer nofollow">
+          {title}
+        </a>
+        {isArchived ? <SubTitle>Arch.</SubTitle> : ''}
       </Title>
-      <Description>{description}</Description>
-      <List>
-        <ListItem>
-          {language && (
-            <Language color={language.color}>{language.name}</Language>
-          )}
-        </ListItem>
-        <ListItem>
-          Created at {new Date(createdAt).toLocaleDateString()}
-        </ListItem>
-        <ListItem>I: {issuesCount}</ListItem>
-        <ListItem>PR: {pullRequestCount}</ListItem>
-      </List>
+      <Info>
+        <InfoItem>
+          <ItemIcon>
+            <Octicon icon={IssueOpened} />
+          </ItemIcon>
+          {issuesCount}
+        </InfoItem>
+        <InfoItem>
+          <ItemIcon>
+            <Octicon icon={GitPullRequest} />
+          </ItemIcon>
+          {pullRequestCount}
+        </InfoItem>
+        <InfoItem>
+          <ItemIcon>
+            <Octicon icon={RepoForked} />
+          </ItemIcon>
+          {forksCount}
+        </InfoItem>
+        <InfoItem>
+          <ItemIcon>
+            <Octicon icon={Star} />
+          </ItemIcon>
+          127
+        </InfoItem>
+      </Info>
     </Wrapper>
   );
 }
 
-export default Repositories;
+export default Repository;

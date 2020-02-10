@@ -6,7 +6,7 @@ import flatMap from 'core-js/features/array/flat-map';
 const Wrapper = styled.div`
   .line {
     fill: none;
-    stroke: #ffab00;
+    stroke: ${({ theme }) => theme.primary};
     stroke-width: 4;
   }
 `;
@@ -24,13 +24,11 @@ function CommitChart({ data }) {
     [data]
   );
 
-  console.log(flatData);
-
   React.useEffect(() => {
     if (!flatData) return;
 
     function init() {
-      const width = 200;
+      const width = 270;
       const height = 40;
       const margin = 10;
 

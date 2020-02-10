@@ -6,10 +6,17 @@ import gql from 'graphql-tag';
 import Profile from './Profile';
 import Repositories from './Repositories';
 
-const Wrapper = styled.main``;
+const Wrapper = styled.main`
+  display: flex;
+`;
 
 const GET_GITHUB_USER = gql`
-  query getUser($login: String!) {
+  query getUser(
+    $login: String!
+    $from: DateTime
+    $to: DateTime
+    $cursor: String
+  ) {
     user(login: $login) {
       avatarUrl
       createdAt
@@ -17,35 +24,43 @@ const GET_GITHUB_USER = gql`
       location
       name
       login
-      repositories(first: 10, orderBy: { field: CREATED_AT, direction: DESC }) {
+      repositories(
+        first: 10
+        orderBy: { field: CREATED_AT, direction: DESC }
+        after: $cursor
+      ) {
         totalCount
-        nodes {
-          url
-          nameWithOwner
-          id
-          isArchived
-          forkCount
-          createdAt
-          url
-          languages(first: 1, orderBy: { field: SIZE, direction: DESC }) {
-            nodes {
-              name
-              color
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        edges {
+          cursor
+          node {
+            url
+            nameWithOwner
+            id
+            isArchived
+            forkCount
+            createdAt
+            url
+            languages(first: 1, orderBy: { field: SIZE, direction: DESC }) {
+              nodes {
+                name
+                color
+              }
             }
+            issues {
+              totalCount
+            }
+            pullRequests {
+              totalCount
+            }
+            description
           }
-          issues {
-            totalCount
-          }
-          pullRequests {
-            totalCount
-          }
-          description
         }
       }
-      contributionsCollection(
-        from: "2020-01-08T22:00:00.000Z"
-        to: "2020-02-09T22:00:00.000Z"
-      ) {
+      contributionsCollection(from: $from, to: $to) {
         contributionCalendar {
           totalContributions
           weeks {
@@ -61,9 +76,28 @@ const GET_GITHUB_USER = gql`
   }
 `;
 
+function getPreviousMonthISO() {
+  const date = new Date();
+  date.setMonth(-1);
+  date.setHours(0, 0, 0);
+  return date.toISOString();
+}
+
+function getCurrentDateISO() {
+  const date = new Date();
+  return date.toISOString();
+}
+
+const monthAgoDate = getPreviousMonthISO();
+const currentDate = getCurrentDateISO();
+
 export default function({ name, testData }) {
-  const { data } = useQuery(GET_GITHUB_USER, {
-    variables: { login: name },
+  const { data, fetchMore } = useQuery(GET_GITHUB_USER, {
+    variables: {
+      login: name,
+      from: monthAgoDate,
+      to: currentDate,
+    },
   });
 
   if (!data) return null;
@@ -74,7 +108,22 @@ export default function({ name, testData }) {
   return (
     <Wrapper>
       <Profile {...user} />
-      <Repositories repositories={repositories} />
+      <Repositories
+        repositories={repositories}
+        // onLoadMore={() =>
+        //   fetchMore({
+        //     variables: { cursor: repositories.pageInfo.endCursor },
+        //     updateQuery: (previousResult, { fetchMoreResult }) => {
+        //       console.log(fetchMoreResult);
+
+        //       const newEdges = fetchMoreResult.user.repositories.edges;
+        //       const pageInfo = fetchMoreResult.user.repositories.pageInfo;
+
+        //       // return newEdges.length ? {}
+        //     },
+        //   })
+        // }
+      />
     </Wrapper>
   );
 }

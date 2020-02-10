@@ -8,7 +8,7 @@ const Form = styled.form`
   height: 40px;
   max-width: 520px;
   width: 100%;
-  margin: 100px auto;
+  margin: 50px auto;
   background: ${({ theme }) => theme.backgroundAccent};
   border-radius: 5px;
   display: flex;
@@ -44,7 +44,11 @@ function SearchBar() {
   };
   return (
     <Form onSubmit={handleSubmit}>
-      <Input value={value} onChange={evt => setValue(evt.target.value)} />
+      <Input
+        type="text"
+        value={value}
+        onChange={evt => setValue(evt.target.value)}
+      />
       <SubmitButton>
         <SearchIcon />
       </SubmitButton>
