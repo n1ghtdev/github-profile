@@ -6,6 +6,7 @@ import Octicon, {
   RepoForked,
   Star,
 } from '@primer/octicons-react';
+import abbreviateNumber from '../utils/abbreviateNumber';
 
 const Wrapper = styled.article`
   margin-bottom: 3px;
@@ -17,7 +18,7 @@ const Wrapper = styled.article`
   border-radius: 4px;
 `;
 const Title = styled.h3`
-  width: 33%;
+  width: 40%;
   font-size: 16px;
   margin: 0;
   color: ${({ theme }) => theme.primary};
@@ -25,13 +26,8 @@ const Title = styled.h3`
     cursor: pointer;
   }
 `;
-const SubTitle = styled.span`
-  color: ${({ theme }) => theme.textDark};
-  font-size: 16px;
-  margin-left: 20px;
-`;
 const Language = styled.div`
-  width: 33%;
+  width: 20%;
   &::before {
     content: '';
     margin-right: 5px;
@@ -43,7 +39,7 @@ const Language = styled.div`
   }
 `;
 const Info = styled.ul`
-  width: 33%;
+  width: 40%;
   text-align: right;
   list-style-type: none;
   margin: 0;
@@ -62,47 +58,54 @@ const ItemIcon = styled.span`
 
 function Repository({
   title,
+  slug,
   language,
   issuesCount,
   forksCount,
   starsCount,
   pullRequestCount,
-  isArchived,
   url,
 }) {
   return (
     <Wrapper>
-      {language && <Language color={language.color}>{language.name}</Language>}
+      {language ? (
+        <Language color={language.color}>{language.name}</Language>
+      ) : (
+        <Language color="#eee">Markdown</Language>
+      )}
       <Title>
-        <a href={url} target="_blank" rel="noopener noreferrer nofollow">
+        <a
+          href={`https://github.com/${slug}`}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >
           {title}
         </a>
-        {isArchived ? <SubTitle>Arch.</SubTitle> : ''}
       </Title>
       <Info>
         <InfoItem>
           <ItemIcon>
             <Octicon icon={IssueOpened} />
           </ItemIcon>
-          {issuesCount}
+          {abbreviateNumber(issuesCount)}
         </InfoItem>
         <InfoItem>
           <ItemIcon>
             <Octicon icon={GitPullRequest} />
           </ItemIcon>
-          {pullRequestCount}
+          {abbreviateNumber(pullRequestCount)}
         </InfoItem>
         <InfoItem>
           <ItemIcon>
             <Octicon icon={RepoForked} />
           </ItemIcon>
-          {forksCount}
+          {abbreviateNumber(forksCount)}
         </InfoItem>
         <InfoItem>
           <ItemIcon>
             <Octicon icon={Star} />
           </ItemIcon>
-          {starsCount}
+          {abbreviateNumber(starsCount)}
         </InfoItem>
       </Info>
     </Wrapper>

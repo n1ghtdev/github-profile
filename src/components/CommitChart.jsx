@@ -31,6 +31,7 @@ function CommitChart({ data }) {
       const width = 270;
       const height = 40;
       const margin = 10;
+      const maxValue = height / 2;
 
       const xScale = d3
         .scaleTime()
@@ -39,7 +40,12 @@ function CommitChart({ data }) {
 
       const yScale = d3
         .scaleLinear()
-        .domain([0, d3.max(flatData, d => d.contributionCount)])
+        .domain([
+          0,
+          d3.max(flatData, d =>
+            d.contributionCount >= maxValue ? maxValue : d.contributionCount
+          ),
+        ])
         .range([height, 0]);
 
       const line = d3
@@ -49,7 +55,7 @@ function CommitChart({ data }) {
 
       const dataset = flatData.map(d => ({
         x: new Date(d.date),
-        y: d.contributionCount,
+        y: d.contributionCount >= maxValue ? maxValue : d.contributionCount,
       }));
 
       const svg = d3

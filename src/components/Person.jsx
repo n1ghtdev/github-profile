@@ -15,6 +15,7 @@ const Wrapper = styled.aside`
   background-color: ${({ theme }) => theme.backgroundAccent};
   border-radius: 4px;
   padding: 15px;
+  height: 100%;
 `;
 
 const Avatar = styled.img`
@@ -56,6 +57,7 @@ const Followed = styled.div`
   justify-content: center;
   width: 150px;
   height: 28px;
+  font-size: 14px;
   border-radius: 4px;
   background-color: ${({ theme }) => theme.secondary};
 
@@ -92,7 +94,7 @@ const ItemIcon = styled.span`
   }
 `;
 
-function Profile({
+function Person({
   avatarUrl,
   login,
   name,
@@ -100,8 +102,8 @@ function Profile({
   email,
   websiteUrl,
   location,
-  url,
   contributionsCollection,
+  viewerIsFollowing,
 }) {
   return (
     <Wrapper>
@@ -110,21 +112,31 @@ function Profile({
         <Intro>
           <Name>{name}</Name>
           <Login>
-            <a href={url}>@{login}</a>
+            <a
+              href={`https://github.com/${login}`}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+            >
+              @{login}
+            </a>
           </Login>
-          <Followed>
-            <StyledOcticon icon={Heart} />
-            FOLLOWED
-          </Followed>
+          {viewerIsFollowing && (
+            <Followed>
+              <StyledOcticon icon={Heart} />
+              FOLLOWED
+            </Followed>
+          )}
         </Intro>
       </Header>
       <List>
-        <ListItem>
-          <ItemIcon>
-            <Octicon icon={Globe} />
-          </ItemIcon>
-          {location}
-        </ListItem>
+        {location && (
+          <ListItem>
+            <ItemIcon>
+              <Octicon icon={Globe} />
+            </ItemIcon>
+            {location}
+          </ListItem>
+        )}
         <ListItem>
           <ItemIcon>
             <Octicon icon={Calendar} />
@@ -164,4 +176,4 @@ function Profile({
   );
 }
 
-export default Profile;
+export default Person;

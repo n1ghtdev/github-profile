@@ -6,9 +6,9 @@ import SearchIcon from './assets/SearchIcon';
 
 const Form = styled.form`
   height: 40px;
-  max-width: 520px;
+  max-width: 480px;
   width: 100%;
-  margin: 50px auto;
+  margin: 25px auto;
   background: ${({ theme }) => theme.backgroundAccent};
   border-radius: 5px;
   display: flex;

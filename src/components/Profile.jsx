@@ -3,9 +3,8 @@ import styled from 'styled-components';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { useParams } from 'react-router-dom';
-import Profile from './Profile';
-import Repositories from '../Repositories';
-import Loading from '../Loading';
+import Person from './Person';
+import Repositories from './Repositories';
 
 const Wrapper = styled.main`
   display: flex;
@@ -25,9 +24,11 @@ const GET_GITHUB_USER = gql`
       location
       name
       login
+      websiteUrl
+      viewerIsFollowing
       repositories(
         first: 10
-        orderBy: { field: CREATED_AT, direction: DESC }
+        orderBy: { field: UPDATED_AT, direction: DESC }
         after: $cursor
       ) {
         totalCount
@@ -38,13 +39,11 @@ const GET_GITHUB_USER = gql`
         edges {
           cursor
           node {
-            url
             nameWithOwner
+            name
             id
-            isArchived
             forkCount
             createdAt
-            url
             stargazers {
               totalCount
             }
@@ -93,8 +92,9 @@ function getCurrentDateISO() {
 const monthAgoDate = getPreviousMonthISO();
 const currentDate = getCurrentDateISO();
 
-export default function() {
+function Profile() {
   const { name } = useParams();
+  console.log(monthAgoDate, currentDate);
 
   const { data, networkStatus, error, fetchMore } = useQuery(GET_GITHUB_USER, {
     variables: {
@@ -108,12 +108,14 @@ export default function() {
   if (!data) return null;
 
   const { repositories, ...user } = data.user;
+  console.log(data.user);
 
   return (
     <Wrapper>
-      <Profile {...user} />
+      <Person {...user} />
       <Repositories
         repositories={repositories}
+        status={networkStatus}
         onLoadMore={() =>
           fetchMore({
             variables: {
@@ -142,7 +144,8 @@ export default function() {
           })
         }
       />
-      <Loading status={networkStatus} />
     </Wrapper>
   );
 }
+
+export default Profile;
