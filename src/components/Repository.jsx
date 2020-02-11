@@ -17,6 +17,7 @@ const Wrapper = styled.article`
   border-radius: 4px;
 `;
 const Title = styled.h3`
+  width: 33%;
   font-size: 16px;
   margin: 0;
   color: ${({ theme }) => theme.primary};
@@ -30,6 +31,7 @@ const SubTitle = styled.span`
   margin-left: 20px;
 `;
 const Language = styled.div`
+  width: 33%;
   &::before {
     content: '';
     margin-right: 5px;
@@ -41,6 +43,8 @@ const Language = styled.div`
   }
 `;
 const Info = styled.ul`
+  width: 33%;
+  text-align: right;
   list-style-type: none;
   margin: 0;
   font-size: 14px;
@@ -61,6 +65,7 @@ function Repository({
   language,
   issuesCount,
   forksCount,
+  starsCount,
   pullRequestCount,
   isArchived,
   url,
@@ -97,7 +102,7 @@ function Repository({
           <ItemIcon>
             <Octicon icon={Star} />
           </ItemIcon>
-          127
+          {starsCount}
         </InfoItem>
       </Info>
     </Wrapper>

@@ -2,9 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
-
+import { useParams } from 'react-router-dom';
 import Profile from './Profile';
-import Repositories from './Repositories';
+import Repositories from '../Repositories';
+import Loading from '../Loading';
 
 const Wrapper = styled.main`
   display: flex;
@@ -44,11 +45,12 @@ const GET_GITHUB_USER = gql`
             forkCount
             createdAt
             url
-            languages(first: 1, orderBy: { field: SIZE, direction: DESC }) {
-              nodes {
-                name
-                color
-              }
+            stargazers {
+              totalCount
+            }
+            primaryLanguage {
+              color
+              name
             }
             issues {
               totalCount
@@ -91,17 +93,19 @@ function getCurrentDateISO() {
 const monthAgoDate = getPreviousMonthISO();
 const currentDate = getCurrentDateISO();
 
-export default function({ name, testData }) {
-  const { data, fetchMore } = useQuery(GET_GITHUB_USER, {
+export default function() {
+  const { name } = useParams();
+
+  const { data, networkStatus, error, fetchMore } = useQuery(GET_GITHUB_USER, {
     variables: {
       login: name,
       from: monthAgoDate,
       to: currentDate,
     },
+    notifyOnNetworkStatusChange: true,
   });
 
   if (!data) return null;
-  console.log(data.user);
 
   const { repositories, ...user } = data.user;
 
@@ -110,20 +114,35 @@ export default function({ name, testData }) {
       <Profile {...user} />
       <Repositories
         repositories={repositories}
-        // onLoadMore={() =>
-        //   fetchMore({
-        //     variables: { cursor: repositories.pageInfo.endCursor },
-        //     updateQuery: (previousResult, { fetchMoreResult }) => {
-        //       console.log(fetchMoreResult);
+        onLoadMore={() =>
+          fetchMore({
+            variables: {
+              cursor: repositories.pageInfo.endCursor,
+            },
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+              const newEdges = fetchMoreResult.user.repositories.edges;
+              const pageInfo = fetchMoreResult.user.repositories.pageInfo;
 
-        //       const newEdges = fetchMoreResult.user.repositories.edges;
-        //       const pageInfo = fetchMoreResult.user.repositories.pageInfo;
-
-        //       // return newEdges.length ? {}
-        //     },
-        //   })
-        // }
+              return newEdges.length
+                ? {
+                    user: {
+                      ...previousResult.user,
+                      repositories: {
+                        __typename: previousResult.user.repositories.__typename,
+                        edges: [
+                          ...previousResult.user.repositories.edges,
+                          ...newEdges,
+                        ],
+                        pageInfo,
+                      },
+                    },
+                  }
+                : previousResult;
+            },
+          })
+        }
       />
+      <Loading status={networkStatus} />
     </Wrapper>
   );
 }

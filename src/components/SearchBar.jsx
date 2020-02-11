@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useApolloClient } from '@apollo/react-hooks';
+import { useHistory } from 'react-router-dom';
 
 import SearchIcon from './assets/SearchIcon';
 
@@ -32,14 +32,14 @@ const SubmitButton = styled.button`
 `;
 
 function SearchBar() {
-  const client = useApolloClient();
+  const history = useHistory();
 
   const [value, setValue] = React.useState('');
   const handleSubmit = evt => {
     evt.preventDefault();
 
     if (value) {
-      client.writeData({ data: { searchQuery: value } });
+      history.push(`/user/${value}`);
     }
   };
   return (

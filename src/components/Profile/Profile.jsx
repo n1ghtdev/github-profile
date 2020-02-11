@@ -10,17 +10,6 @@ import Octicon, {
 
 import CommitChart from './CommitChart';
 
-/**
- * name
- * login
- * bio
- * avatar
- * email
- * createdAt
- * location
- * url
- */
-
 const Wrapper = styled.aside`
   flex: 0 0 360px;
   background-color: ${({ theme }) => theme.backgroundAccent};
