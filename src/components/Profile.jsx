@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { useParams } from 'react-router-dom';
 import Person from './Person';
-import Repositories from './Repositories';
+import Repos from './Repos';
 
 const Wrapper = styled.main`
   display: flex;
@@ -96,7 +96,7 @@ function Profile() {
   const { name } = useParams();
   console.log(monthAgoDate, currentDate);
 
-  const { data, networkStatus, error, fetchMore } = useQuery(GET_GITHUB_USER, {
+  const { data, networkStatus, fetchMore } = useQuery(GET_GITHUB_USER, {
     variables: {
       login: name,
       from: monthAgoDate,
@@ -108,13 +108,12 @@ function Profile() {
   if (!data) return null;
 
   const { repositories, ...user } = data.user;
-  console.log(data.user);
 
   return (
     <Wrapper>
       <Person {...user} />
-      <Repositories
-        repositories={repositories}
+      <Repos
+        repos={repositories}
         status={networkStatus}
         onLoadMore={() =>
           fetchMore({

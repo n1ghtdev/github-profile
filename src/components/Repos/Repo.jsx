@@ -6,7 +6,7 @@ import Octicon, {
   RepoForked,
   Star,
 } from '@primer/octicons-react';
-import abbreviateNumber from '../utils/abbreviateNumber';
+import abbreviateNumber from '../../utils/abbreviateNumber';
 
 const Wrapper = styled.article`
   margin-bottom: 3px;
@@ -56,7 +56,7 @@ const ItemIcon = styled.span`
   margin-right: 5px;
 `;
 
-function Repository({
+function Repo({
   title,
   slug,
   language,
@@ -64,7 +64,6 @@ function Repository({
   forksCount,
   starsCount,
   pullRequestCount,
-  url,
 }) {
   return (
     <Wrapper>
@@ -112,4 +111,4 @@ function Repository({
   );
 }
 
-export default Repository;
+export default Repo;

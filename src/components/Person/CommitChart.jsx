@@ -83,7 +83,7 @@ function CommitChart({ data }) {
 
   return (
     <div>
-      <Wrapper ref={containerRef} />
+      <Wrapper data-testid="commit-chart" ref={containerRef} />
     </div>
   );
 }

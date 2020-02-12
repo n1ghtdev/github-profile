@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import Repository from './Repository';
-import Loading from './Loading';
+import Repo from './Repo';
+import Loading from '../Loading';
 
 const List = styled.div`
   background-color: ${({ theme }) => theme.backgroundAccent};
@@ -37,32 +37,39 @@ const LoadingWrapper = styled.div`
   }
 `;
 
-function Repositories({ repositories, onLoadMore, status }) {
+const NoRepos = styled.div`
+  font-weight: bold;
+  text-align: center;
+`;
+
+function Repos({ repos, onLoadMore, status }) {
   return (
     <List>
-      {repositories &&
-        repositories.edges.map(({ node }) => (
-          <Repository
+      {repos &&
+        repos.edges.map(({ node }) => (
+          <Repo
             key={node.id}
             title={node.name}
             slug={node.nameWithOwner}
-            description={node.description}
             language={node.primaryLanguage}
             starsCount={node.stargazers.totalCount}
             issuesCount={node.issues.totalCount}
             forksCount={node.forkCount}
             pullRequestCount={node.pullRequests.totalCount}
-            createdAt={node.createdAt}
           />
         ))}
       <LoadingWrapper>
         <Loading status={status} />
       </LoadingWrapper>
-      <LoadMore type="button" onClick={onLoadMore}>
-        load more
-      </LoadMore>
+      {repos && repos.totalCount > 0 ? (
+        <LoadMore type="button" onClick={onLoadMore}>
+          load more
+        </LoadMore>
+      ) : (
+        <NoRepos>User doesn't have any repositories yet.</NoRepos>
+      )}
     </List>
   );
 }
 
-export default Repositories;
+export default Repos;
