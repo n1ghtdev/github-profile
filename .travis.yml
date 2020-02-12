@@ -9,7 +9,7 @@ env:
   - CI=true
 
 before_deploy:
-  - echo $GITHUB_TOKEN > .env
+  - echo REACT_APP_GITHUB_TOKEN=$GITHUB_TOKEN > .env
   - npm install netlify-cli -g
   - npm run build
 
