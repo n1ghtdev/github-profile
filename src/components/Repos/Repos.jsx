@@ -43,7 +43,7 @@ const NoRepos = styled.div`
 `;
 
 function Repos({ repos, onLoadMore, status }) {
-  const { hasNextPage } = repos.pageInfo;
+  const { hasNextPage } = repos?.pageInfo || {};
 
   return (
     <List>
@@ -68,7 +68,7 @@ function Repos({ repos, onLoadMore, status }) {
           load more
         </LoadMore>
       )}
-      {!repos.totalCount > 0 && (
+      {!repos?.totalCount > 0 && (
         <NoRepos>User doesn't have any repositories yet.</NoRepos>
       )}
     </List>
