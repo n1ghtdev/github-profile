@@ -79,7 +79,7 @@ const GET_GITHUB_USER = gql`
 
 function getPreviousMonthISO() {
   const date = new Date();
-  date.setMonth(-1);
+  date.setMonth(date.getMonth() - 1);
   date.setHours(0, 0, 0);
   return date.toISOString();
 }
@@ -93,6 +93,7 @@ const monthAgoDate = getPreviousMonthISO();
 const currentDate = getCurrentDateISO();
 
 function Profile() {
+  console.log(monthAgoDate, currentDate);
   const { name } = useParams();
   console.log(monthAgoDate, currentDate);
 
